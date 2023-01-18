@@ -1,4 +1,4 @@
-instagram clone using mysql
+Very basic instagram clone-It can find the oldest users,identify users who have not uploaded any photos,It can identify most popular photos and user to whom it belong to ,It can identify the most popular registeration day,It can identify how many times does an average user posts and the most popular tags.
 
 
 
@@ -14,7 +14,7 @@ create table users(
 
 insert into users(username) values
 ("Ronit"),
-("Sam"),
+("Rahul"),
 ("Rishi");
 
 create table photos(
@@ -90,3 +90,47 @@ insert into tags(tag_name)values
 insert into photo_tags(photo_id,tag_id)values
 (1,1),
 (2,2);
+
+select * 
+from users 
+order by created_at 
+limit 5;
+
+select 
+dayname(created_at) as day,
+count(*) as total 
+from users
+group by day
+order by total desc; 
+
+select username
+from users
+left join photos
+on users.id=photos.user_id
+where photos.id is null;
+
+
+select username,
+photos.id,
+photos_url,
+count(*) as total
+from photos
+inner join likes 
+on likes.photo_id=photos.id
+inner join users
+on photos.user_id=users.id
+group by photos.id
+order by total desc
+limit 1;
+
+select 
+(select count(*) from photos)/(select count(*) from users);
+
+select tag.tag_name,
+count(*) as total
+from photo_tags
+join tags
+on photo_tag.tag_id=tags.id
+group by tag.id
+order by total desc
+limit 5;
